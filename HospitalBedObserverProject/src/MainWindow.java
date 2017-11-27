@@ -138,19 +138,22 @@ public class MainWindow {
 	}
 	
 	public void createAllViews() {
-		for (int i = 1; i <= myHospital.getAmountOfRooms(); ++i) {
-			
-			myHospital.getRoom(i).setMyTab(new TabItem(tabFolder, SWT.None));
-			myHospital.getRoom(i).getMyTab().setText("Room " + i);
-			myHospital.getRoom(i).setMyTabGroup(new Group(tabFolder, SWT.NONE));
-			myHospital.getRoom(i).getMyTab().setControl(myHospital.getRoom(i).getMyTabGroup());
-			
-			for(int j = 1; j <= myHospital.getRoom(i).getAmountOfBeds(); ++j) {
+	    Iterator<Entry<Integer,Room>> it = myHospital.getRooms().entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry<Integer,Room> roomEntry = it.next();
+			myHospital.getRoom(roomEntry.getKey()).setMyTab(new TabItem(tabFolder, SWT.None));
+			myHospital.getRoom(roomEntry.getKey()).getMyTab().setText("Room " + roomEntry.getKey());
+			myHospital.getRoom(roomEntry.getKey()).setMyTabGroup(new Group(tabFolder, SWT.NONE));
+			myHospital.getRoom(roomEntry.getKey()).getMyTab().setControl(myHospital.getRoom(roomEntry.getKey()).getMyTabGroup());
+			Iterator<Entry<Integer,Bed>> bedIt = myHospital.getRoom(roomEntry.getKey()).getBeds().entrySet().iterator();
+			int bedCounter = 1;
+			while (bedIt.hasNext()) {
+		        Map.Entry<Integer, Bed> bedEntry = bedIt.next();
 				
-				myHospital.getRoom(i).getBed(j).setMyGroup(new Group(myHospital.getRoom(i).getMyTabGroup(), SWT.NONE));
+				myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).setMyGroup(new Group(myHospital.getRoom(roomEntry.getKey()).getMyTabGroup(), SWT.NONE));
 				
-				myHospital.getRoom(i).getBed(j).getMyGroup().setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
-				myHospital.getRoom(i).getBed(j).getMyGroup().setText("Bed " + j);
+				myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).getMyGroup().setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
+				myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).getMyGroup().setText("Bed " + bedEntry.getKey());
 				// Height and width of groups
 				int groupWidth = 171;
 				int groupHeight = 94;
@@ -158,11 +161,11 @@ public class MainWindow {
 				//Set the y-position of the group
 				int basePosition = 24;
 				int amountOfBedsPerRow = 3;
-				int yPosition = basePosition + ((j-1)/amountOfBedsPerRow)*121;
+				int yPosition = basePosition + ((bedEntry.getKey()-1)/amountOfBedsPerRow)*121;
 				
 				//Set the x-positions of the group
 				int xPosition = 0;
-				switch (j % 3) {
+				switch (bedCounter % 3) {
 					case 1:
 						xPosition = 24;
 						break;
@@ -176,19 +179,20 @@ public class MainWindow {
 						break;
 				}
 				
-				myHospital.getRoom(i).getBed(j).getMyGroup().setBounds(xPosition, yPosition, groupWidth, groupHeight);
+				myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).getMyGroup().setBounds(xPosition, yPosition, groupWidth, groupHeight);
 				
 				
 				
-				myHospital.getRoom(i).getBed(j).setMyInfoButton(new Button(myHospital.getRoom(i).getBed(j).getMyGroup(), SWT.NONE));
-				myHospital.getRoom(i).getBed(j).getMyInfoButton().addSelectionListener(new SelectionAdapter() {
+				myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).setMyInfoButton(new Button(myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).getMyGroup(), SWT.NONE));
+				myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).getMyInfoButton().addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(SelectionEvent e) {
 						BedInfoWindow BedInfoWindow = new BedInfoWindow();
 						BedInfoWindow.open();
 					}
 				});
-				myHospital.getRoom(i).getBed(j).getMyInfoButton().setBounds(71, 54, 90, 30);
-				myHospital.getRoom(i).getBed(j).getMyInfoButton().setText("Bed " + j +  " Info");
+				myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).getMyInfoButton().setBounds(71, 54, 90, 30);
+				myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).getMyInfoButton().setText("Bed " + (bedEntry.getKey()) +  " Info");
+				++bedCounter;
 			}
 			
 		}
