@@ -1,12 +1,16 @@
 import java.util.*;
 
-public final class Hospital {
+public class Hospital {
 	private String myName = new String("");
-	private List<Room> myRooms = new ArrayList<Room>();
-	
-	public Hospital(String name) {
-		this.myName = name;
+	private HashMap<Integer, Room> myRooms = new HashMap<Integer, Room>();
+    private static final Hospital myHospital = new Hospital(); 
+    private Hospital() {
 	}
+    
+     //Singleton   
+    public static Hospital getInstance() {
+      return myHospital;
+    } 
 	
 	public int getAmountOfRooms() {
 		return this.myRooms.size();
@@ -20,17 +24,16 @@ public final class Hospital {
 		this.myName = myName;
 	}
 
-	public List<Room> getMyRooms() {
+	public HashMap<Integer, Room> getRooms() {
 		return myRooms;
 	}
-
-	public void setMyRooms(List<Room> myRooms) {
-		this.myRooms = myRooms;
+	
+	public Room getRoom(int Index) {
+		return myRooms.get(Index);
 	}
 
-	public void addRoom(Room Room) {
-		myRooms.add(Room);
+	public void addRoom(int Index, Room Room) {
+		myRooms.put(Index, Room);
 	}
-
 	
 }

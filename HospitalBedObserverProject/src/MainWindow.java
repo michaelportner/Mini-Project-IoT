@@ -1,26 +1,33 @@
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Menu;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.RowData;
 
 public class MainWindow {
 
 	protected Shell shlBedObserver;
-
+	private TabFolder tabFolder;
+	private Hospital myHospital = Hospital.getInstance();
+	
 	/**
 	 * Launch the application.
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
 		try {
 			MainWindow window = new MainWindow();
 			window.open();
@@ -49,86 +56,150 @@ public class MainWindow {
 	 */
 	protected void createContents() {
 		shlBedObserver = new Shell();
-		shlBedObserver.setSize(738, 453);
+		shlBedObserver.setSize(738, 574);
 		shlBedObserver.setText("Bed Observer");
-		shlBedObserver.setLayout(new FillLayout(SWT.HORIZONTAL));
+		shlBedObserver.setLayout(new RowLayout(SWT.HORIZONTAL));
 		
 		Menu menu = new Menu(shlBedObserver, SWT.BAR);
 		shlBedObserver.setMenuBar(menu);
 		
 		MenuItem mntmFile = new MenuItem(menu, SWT.NONE);
+
 		mntmFile.setText("File");
 		
 		MenuItem mntmHelp = new MenuItem(menu, SWT.NONE);
 		mntmHelp.setText("Help");
 		
-		TabFolder tabFolder = new TabFolder(shlBedObserver, SWT.NONE);
+		Composite composite = new Composite(shlBedObserver, SWT.NONE);
 		
-		TabItem tbtmRoom = new TabItem(tabFolder, SWT.NONE);
-		tbtmRoom.setText("Room 1");
+				tabFolder = new TabFolder(composite, SWT.NONE);
+				tabFolder.setLocation(0, 0);
+				tabFolder.setSize(720, 435);
+				
+				Composite composite_1 = new Composite(shlBedObserver, SWT.NONE);
+				composite_1.setLayoutData(new RowData(718, 55));
+				
+				Button btnRefresh = new Button(composite_1, SWT.NONE);
+				btnRefresh.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						refreshAllViews();
+					}
+				});
+				btnRefresh.setBounds(488, 10, 90, 30);
+				btnRefresh.setText("Refresh");
+				
+				Button btnClose = new Button(composite_1, SWT.NONE);
+				btnClose.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						shlBedObserver.close();
+					}
+				});
+				btnClose.setBounds(606, 10, 90, 30);
+				btnClose.setText("Close");
 		
-		Group groupBed_1 = new Group(tabFolder, SWT.NONE);
-		tbtmRoom.setControl(groupBed_1);
+		//Test Block
+			myHospital.addRoom(1, new Room());
+			myHospital.addRoom(2, new Room());
+			myHospital.addRoom(3, new Room());
+			
+			myHospital.getRoom(1).addBed(1, new Bed());
+			myHospital.getRoom(1).addBed(2, new Bed());
+			myHospital.getRoom(1).addBed(3, new Bed());
+			myHospital.getRoom(1).addBed(4, new Bed());
+			myHospital.getRoom(1).addBed(5, new Bed());
+			myHospital.getRoom(1).addBed(6, new Bed());
+			myHospital.getRoom(1).addBed(7, new Bed());
+			myHospital.getRoom(1).addBed(8, new Bed());
+			
+			myHospital.getRoom(2).addBed(1, new Bed());
+			myHospital.getRoom(2).addBed(2, new Bed());
+			myHospital.getRoom(2).addBed(3, new Bed());
+			
+			myHospital.getRoom(3).addBed(1, new Bed());
+			myHospital.getRoom(3).addBed(2, new Bed());
+			myHospital.getRoom(3).addBed(3, new Bed());
+			myHospital.getRoom(3).addBed(4, new Bed());
+			myHospital.getRoom(3).addBed(5, new Bed());
+			myHospital.getRoom(3).addBed(6, new Bed());
+			
+		//Test Block
+			
+			createAllViews();
 		
-		Group grpBed = new Group(groupBed_1, SWT.NONE);
-		grpBed.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		grpBed.setText("Bed 1");
-		grpBed.setBounds(10, 20, 190, 107);
 		
-		Button btnBedInfo_1 = new Button(grpBed, SWT.NONE);
-		btnBedInfo_1.setBounds(90, 67, 90, 30);
-		btnBedInfo_1.setText("Bed 1 Info");
-		
-		Group group = new Group(groupBed_1, SWT.NONE);
-		group.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		group.setText("Bed 1");
-		group.setBounds(224, 20, 190, 107);
-		
-		Button button = new Button(group, SWT.NONE);
-		button.setText("Bed 1 Info");
-		button.setBounds(90, 67, 90, 30);
-		
-		Group group_1 = new Group(groupBed_1, SWT.NONE);
-		group_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		group_1.setText("Bed 1");
-		group_1.setBounds(438, 20, 190, 107);
-		
-		Button button_1 = new Button(group_1, SWT.NONE);
-		button_1.setText("Bed 1 Info");
-		button_1.setBounds(90, 67, 90, 30);
-		
-		Group group_2 = new Group(groupBed_1, SWT.NONE);
-		group_2.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		group_2.setText("Bed 1");
-		group_2.setBounds(438, 144, 190, 107);
-		
-		Button button_2 = new Button(group_2, SWT.NONE);
-		button_2.setText("Bed 1 Info");
-		button_2.setBounds(90, 67, 90, 30);
-		
-		Group group_3 = new Group(groupBed_1, SWT.NONE);
-		group_3.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		group_3.setText("Bed 1");
-		group_3.setBounds(224, 144, 190, 107);
-		
-		Button button_3 = new Button(group_3, SWT.NONE);
-		button_3.setText("Bed 1 Info");
-		button_3.setBounds(90, 67, 90, 30);
-		
-		Group group_4 = new Group(groupBed_1, SWT.NONE);
-		group_4.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		group_4.setText("Bed 1");
-		group_4.setBounds(10, 144, 190, 107);
-		
-		Button button_4 = new Button(group_4, SWT.NONE);
-		button_4.setText("Bed 1 Info");
-		button_4.setBounds(90, 67, 90, 30);
-		
-		TabItem tabItem = new TabItem(tabFolder, SWT.NONE);
-		tabItem.setText("New Item");
-		
-		TabItem tbtmNewItem = new TabItem(tabFolder, SWT.NONE);
-		tbtmNewItem.setText("New Item");
 
+	}	
+	
+	public void refreshAllViews() {
+		removeAllViews();
+		createAllViews();
+	}
+	
+	public void createAllViews() {
+		for (int i = 1; i <= myHospital.getAmountOfRooms(); ++i) {
+			
+			myHospital.getRoom(i).setMyTab(new TabItem(tabFolder, SWT.None));
+			myHospital.getRoom(i).getMyTab().setText("Room " + i);
+			myHospital.getRoom(i).setMyTabGroup(new Group(tabFolder, SWT.NONE));
+			myHospital.getRoom(i).getMyTab().setControl(myHospital.getRoom(i).getMyTabGroup());
+			
+			for(int j = 1; j <= myHospital.getRoom(i).getAmountOfBeds(); ++j) {
+				
+				myHospital.getRoom(i).getBed(j).setMyGroup(new Group(myHospital.getRoom(i).getMyTabGroup(), SWT.NONE));
+				
+				myHospital.getRoom(i).getBed(j).getMyGroup().setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
+				myHospital.getRoom(i).getBed(j).getMyGroup().setText("Bed " + j);
+				// Height and width of groups
+				int groupWidth = 171;
+				int groupHeight = 94;
+				
+				//Set the y-position of the group
+				int basePosition = 24;
+				int amountOfBedsPerRow = 3;
+				int yPosition = basePosition + ((j-1)/amountOfBedsPerRow)*121;
+				
+				//Set the x-positions of the group
+				int xPosition = 0;
+				switch (j % 3) {
+					case 1:
+						xPosition = 24;
+						break;
+					case 2:
+						xPosition = 237;
+						break;
+					case 0:
+						xPosition = 450;
+						break;
+					default:
+						break;
+				}
+				
+				myHospital.getRoom(i).getBed(j).getMyGroup().setBounds(xPosition, yPosition, groupWidth, groupHeight);
+				
+				
+				
+				myHospital.getRoom(i).getBed(j).setMyInfoButton(new Button(myHospital.getRoom(i).getBed(j).getMyGroup(), SWT.NONE));
+				myHospital.getRoom(i).getBed(j).getMyInfoButton().addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent e) {
+						removeAllViews();
+					}
+				});
+				myHospital.getRoom(i).getBed(j).getMyInfoButton().setBounds(71, 54, 90, 30);
+				myHospital.getRoom(i).getBed(j).getMyInfoButton().setText("Bed " + j +  " Info");
+			}
+			
+		}
+	    
+	}
+	
+	public void removeAllViews() {
+	    Iterator<Entry<Integer,Room>> it = myHospital.getRooms().entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry<Integer,Room> roomEntry = it.next();
+			myHospital.getRoom(roomEntry.getKey()).getMyTab().dispose();
+	        it.remove(); // avoids a ConcurrentModificationException
+	    }	    
 	}
 }
