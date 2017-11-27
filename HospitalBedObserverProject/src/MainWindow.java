@@ -183,7 +183,8 @@ public class MainWindow {
 				myHospital.getRoom(i).getBed(j).setMyInfoButton(new Button(myHospital.getRoom(i).getBed(j).getMyGroup(), SWT.NONE));
 				myHospital.getRoom(i).getBed(j).getMyInfoButton().addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(SelectionEvent e) {
-						removeAllViews();
+						BedInfoWindow BedInfoWindow = new BedInfoWindow();
+						BedInfoWindow.open();
 					}
 				});
 				myHospital.getRoom(i).getBed(j).getMyInfoButton().setBounds(71, 54, 90, 30);
@@ -199,7 +200,6 @@ public class MainWindow {
 	    while (it.hasNext()) {
 	        Map.Entry<Integer,Room> roomEntry = it.next();
 			myHospital.getRoom(roomEntry.getKey()).getMyTab().dispose();
-	        it.remove(); // avoids a ConcurrentModificationException
 	    }	    
 	}
 }
