@@ -1,6 +1,7 @@
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.wb.swt.SWTResourceManager;
+import java.util.*;
 
 public class Bed {
 	private Status myStatus = Status.RED;
@@ -34,7 +35,9 @@ public class Bed {
 	
 
 	public void setMyStatus(Status myStatus) {
+		Date DateTimeNow = new Date();
 		this.myStatus = myStatus;
+		this.myBedInfo.addHistoryEntry(DateTimeNow, myStatus);
 		switch (myStatus){
 		case RED:
 			myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
