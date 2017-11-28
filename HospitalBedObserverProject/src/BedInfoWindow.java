@@ -61,7 +61,7 @@ public class BedInfoWindow {
 	protected void createContents() {
 		shlBedInformation = new Shell();
 		shlBedInformation.setSize(460, 300);
-		shlBedInformation.setText(myBedInfo.getName() + " information");
+		shlBedInformation.setText("Bed " + myBedInfo.getName() + " information");
 		shlBedInformation.setLayout(new RowLayout(SWT.HORIZONTAL));
 		
 		Composite composite = new Composite(shlBedInformation, SWT.NONE);
