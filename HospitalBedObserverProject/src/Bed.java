@@ -4,7 +4,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import java.util.*;
 
 public class Bed {
-	private State myState = State.RED;
+	private State myState = State.UNKNOWN;
 	private Group myGroup;
 	private Button myInfoButton;
 	private BedInfo myBedInfo = new BedInfo();
