@@ -1,8 +1,8 @@
 import java.util.*;
 
 class BedInfo {
-	private String name;
-	private HashMap<Date, Status> History;
+	private String name = "";
+	private HashMap<Date, Status> History = new HashMap<Date, Status>();
 	
 	public String getName() {
 		return name;
@@ -13,7 +13,9 @@ class BedInfo {
 	public HashMap<Date, Status> getHistory() {
 		return History;
 	}
-	public void addHistoryEntry(Date Datum, Status BedStatus) {
+	public void addHistoryEntry(long DatumMs, Status BedStatus) {
+		Date Datum = new Date();
+		Datum.setTime(DatumMs);
 		History.put(Datum, BedStatus);
 	}
 	

@@ -33,11 +33,15 @@ public class Bed {
 		return myBedInfo;
 	}
 	
+	public void setMyBedInfo(BedInfo BedInfo) {
+		this.myBedInfo = BedInfo;
+	}
+	
 
 	public void setMyStatus(Status myStatus) {
 		Date DateTimeNow = new Date();
 		this.myStatus = myStatus;
-		this.myBedInfo.addHistoryEntry(DateTimeNow, myStatus);
+		this.myBedInfo.addHistoryEntry(DateTimeNow.getTime(), myStatus);
 		switch (myStatus){
 		case RED:
 			myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));

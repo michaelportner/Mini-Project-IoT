@@ -19,7 +19,7 @@ import org.eclipse.swt.layout.RowData;
 public class BedInfoWindow {
 
 	protected Shell shlBedInformation;
-	protected BedInfo myBedInfo;
+	protected BedInfo myBedInfo = new BedInfo();
 
 	public BedInfoWindow(BedInfo myBedInfo) {
 		this.myBedInfo = myBedInfo;
@@ -69,7 +69,7 @@ public class BedInfoWindow {
 		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
 		composite.setLayoutData(new RowData(437, 186));
 		
-		List list = new List(composite, SWT.BORDER);
+		List list = new List(composite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		
 		//Add history elements to the List in format: 2016/11/16 12:08:43	Status: RED
 		if (myBedInfo != null) {

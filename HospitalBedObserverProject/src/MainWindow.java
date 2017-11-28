@@ -1,6 +1,8 @@
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Menu;
+
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -105,6 +107,19 @@ public class MainWindow {
 			myHospital.addRoom(3, new Room());
 			
 			myHospital.getRoom(1).addBed(1, new Bed());
+			BedInfo BedInfo = new BedInfo();
+			Date Datum = new Date();
+			
+			//BedInfoWindow Test implemented for Bed 1 in Room 1
+			BedInfo.setName("Bed 1");
+			for (int i = 0; i< 100; i++) {
+				Datum.setTime(Datum.getTime()+i*10000);
+				BedInfo.addHistoryEntry(Datum.getTime(), Status.RED);
+			}
+			myHospital.getRoom(1).getBed(1).setMyBedInfo(BedInfo);
+			myHospital.getRoom(1).getBed(1).setMyBedInfo(BedInfo);
+			
+			
 			myHospital.getRoom(1).addBed(2, new Bed());
 			myHospital.getRoom(1).addBed(3, new Bed());
 			myHospital.getRoom(1).addBed(4, new Bed());
@@ -186,7 +201,7 @@ public class MainWindow {
 				myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).setMyInfoButton(new Button(myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).getMyGroup(), SWT.NONE));
 				myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).getMyInfoButton().addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(SelectionEvent e) {
-						BedInfoWindow BedInfoWindow = new BedInfoWindow();
+						BedInfoWindow BedInfoWindow = new BedInfoWindow(myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).getMyBedInfo());
 						BedInfoWindow.open();
 					}
 				});
