@@ -4,10 +4,14 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import java.util.*;
 
 public class Bed {
-	private Status myStatus = Status.RED;
+	private State myState = State.RED;
 	private Group myGroup;
 	private Button myInfoButton;
-	private BedInfo myBedInfo;
+	private BedInfo myBedInfo = new BedInfo();
+	
+	public void setName(String name){
+		myBedInfo.setName(name);
+	}
 	
 	public Group getMyGroup() {
 		return myGroup;
@@ -25,8 +29,8 @@ public class Bed {
 		myGroup = Group;
 	}
 
-	public Status getMyStatus() {
-		return myStatus;
+	public State getMyState() {
+		return myState;
 	}
 	
 	public BedInfo getMyBedInfo() {
@@ -38,11 +42,11 @@ public class Bed {
 	}
 	
 
-	public void setMyStatus(Status myStatus) {
+	public void setMyState(State myState) {
 		Date DateTimeNow = new Date();
-		this.myStatus = myStatus;
-		this.myBedInfo.addHistoryEntry(DateTimeNow.getTime(), myStatus);
-		switch (myStatus){
+		this.myState = myState;
+		this.myBedInfo.addHistoryEntry(DateTimeNow.getTime(), myState);
+		switch (myState){
 		case RED:
 			myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
 			break;
@@ -53,7 +57,7 @@ public class Bed {
 			myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_GREEN));
 			break;
 		default:
-			myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
+			myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 			break;			
 		}
 	}	

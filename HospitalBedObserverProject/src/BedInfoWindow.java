@@ -4,8 +4,7 @@ import org.eclipse.swt.widgets.Button;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -62,7 +61,7 @@ public class BedInfoWindow {
 	protected void createContents() {
 		shlBedInformation = new Shell();
 		shlBedInformation.setSize(460, 300);
-		shlBedInformation.setText("Bed information");
+		shlBedInformation.setText(myBedInfo.getName() + " information");
 		shlBedInformation.setLayout(new RowLayout(SWT.HORIZONTAL));
 		
 		Composite composite = new Composite(shlBedInformation, SWT.NONE);
@@ -71,12 +70,13 @@ public class BedInfoWindow {
 		
 		List list = new List(composite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		
-		//Add history elements to the List in format: 2016/11/16 12:08:43	Status: RED
+		//Add history elements to the List in format: 2016/11/16 12:08:43	State: RED
 		if (myBedInfo != null) {
-			java.util.List<Date> historyKeys = new ArrayList<Date>(myBedInfo.getHistory().keySet());
+			java.util.List<HistoryEntry> history = myBedInfo.getHistory();
+			Collections.sort(history);
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			for (Object DateKey:historyKeys){
-				list.add(dateFormat.format(DateKey) + "/t Status: " + myBedInfo.getHistoryEntry((Date) DateKey));
+			for (HistoryEntry historyEntry:history){
+				list.add(dateFormat.format(historyEntry.getDateTime()) + "     |      State: " + historyEntry.getHistoricalState().toString());
 			}
 		}
 		

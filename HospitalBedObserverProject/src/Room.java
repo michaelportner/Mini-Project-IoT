@@ -31,7 +31,8 @@ public class Room {
 		return myBeds.get(Index);
 	}
 	
-	public void addBed(int Index, Bed Bed) {
+	public void addBed(Integer Index, Bed Bed) {
+		Bed.setName(Index.toString());
 		myBeds.put(Index, Bed);
 	}
 	

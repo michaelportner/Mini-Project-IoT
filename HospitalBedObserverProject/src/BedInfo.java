@@ -2,24 +2,32 @@ import java.util.*;
 
 class BedInfo {
 	private String name = "";
-	private HashMap<Date, Status> History = new HashMap<Date, Status>();
+	private List<HistoryEntry> History = new ArrayList<HistoryEntry>();
 	
 	public String getName() {
 		return name;
 	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
-	public HashMap<Date, Status> getHistory() {
+	
+	public List<HistoryEntry> getHistory() {
 		return History;
 	}
-	public void addHistoryEntry(long DatumMs, Status BedStatus) {
-		Date Datum = new Date();
-		Datum.setTime(DatumMs);
-		History.put(Datum, BedStatus);
+	
+	public void addHistoryEntry(long myDateMs, State BedState) {
+		Date myDate = new Date();
+		myDate.setTime(myDateMs);
+		History.add(new HistoryEntry(myDate, BedState));
 	}
 	
-	public Status getHistoryEntry(Date DateTimeKey) {
-		return History.get(DateTimeKey);
+	public State getHistoryEntryState(Date DateTimeKey) {
+		for (int i = 0; i < History.size(); ++i) {
+			if(History.get(i).getDateTime() == DateTimeKey) {
+				return History.get(i).getHistoricalState();
+			}				
+		}
+		return null;
 	}
 }

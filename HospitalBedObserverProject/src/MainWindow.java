@@ -2,7 +2,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Menu;
 
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -44,6 +43,28 @@ public class MainWindow {
 	public void open() {
 		Display display = Display.getDefault();
 		createContents();
+		
+		//BedInfoWindow Test implemented for Bed 1 and 2 in Room 1
+		for (int i = 0; i< 100; i++) {
+			if (i%10 > 0 && i%10 < 3) {
+				myHospital.getRoom(1).getBed(1).setMyState(State.GREEN);
+			}else if (i%10 < 7) {
+				myHospital.getRoom(1).getBed(1).setMyState(State.ORANGE);
+			}else{
+				myHospital.getRoom(1).getBed(1).setMyState(State.RED);
+			}
+		}
+		for (int i = 0; i< 100; i++) {
+			if (i%10 > 0 && i%10 < 3) {
+				myHospital.getRoom(1).getBed(2).setMyState(State.GREEN);
+			}else if (i%10 < 7) {
+				myHospital.getRoom(1).getBed(2).setMyState(State.ORANGE);
+			}else{
+				myHospital.getRoom(1).getBed(2).setMyState(State.RED);
+			}
+		}
+		//End BedInfoTest
+		
 		shlBedObserver.open();
 		shlBedObserver.layout();
 		while (!shlBedObserver.isDisposed()) {
@@ -107,20 +128,7 @@ public class MainWindow {
 			myHospital.addRoom(3, new Room());
 			
 			myHospital.getRoom(1).addBed(1, new Bed());
-			BedInfo BedInfo = new BedInfo();
-			Date Datum = new Date();
-			
-			//BedInfoWindow Test implemented for Bed 1 in Room 1
-			BedInfo.setName("Bed 1");
-			for (int i = 0; i< 100; i++) {
-				Datum.setTime(Datum.getTime()+i*10000);
-				BedInfo.addHistoryEntry(Datum.getTime(), Status.RED);
-			}
-			myHospital.getRoom(1).getBed(1).setMyBedInfo(BedInfo);
-			myHospital.getRoom(1).getBed(1).setMyBedInfo(BedInfo);
-			
-			
-			myHospital.getRoom(1).addBed(2, new Bed());
+			myHospital.getRoom(1).addBed(2, new Bed());	
 			myHospital.getRoom(1).addBed(3, new Bed());
 			myHospital.getRoom(1).addBed(4, new Bed());
 			myHospital.getRoom(1).addBed(5, new Bed());
@@ -139,7 +147,7 @@ public class MainWindow {
 			myHospital.getRoom(3).addBed(5, new Bed());
 			myHospital.getRoom(3).addBed(6, new Bed());
 			
-		//Test Block
+		//End Test Block
 			
 			createAllViews();
 		
@@ -166,8 +174,7 @@ public class MainWindow {
 		        Map.Entry<Integer, Bed> bedEntry = bedIt.next();
 				
 				myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).setMyGroup(new Group(myHospital.getRoom(roomEntry.getKey()).getMyTabGroup(), SWT.NONE));
-				
-				myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).getMyGroup().setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
+				myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).getMyGroup().setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 				myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).getMyGroup().setText("Bed " + bedEntry.getKey());
 				// Height and width of groups
 				int groupWidth = 171;
