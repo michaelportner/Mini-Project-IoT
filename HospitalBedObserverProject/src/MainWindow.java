@@ -5,6 +5,7 @@ import org.eclipse.swt.widgets.Menu;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -31,6 +32,8 @@ public class MainWindow {
 	public static void main(String[] args) {
 		try {
 			MainWindow window = new MainWindow();
+			ObserverMqttClient myObserverMqttClient = ObserverMqttClient.getInstance();
+			myObserverMqttClient.publishInitializeRequest(ObserverRequest.REINITIALIZE);
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -39,8 +42,9 @@ public class MainWindow {
 
 	/**
 	 * Open the window.
+	 * @throws InterruptedException 
 	 */
-	public void open() {
+	public void open() throws InterruptedException {
 		Display display = Display.getDefault();
 		createContents();
 		
