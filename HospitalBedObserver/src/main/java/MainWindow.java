@@ -167,7 +167,7 @@ public class MainWindow {
 	public void createAllViews() {
 	    Iterator<Entry<Integer,Room>> it = myHospital.getRooms().entrySet().iterator();
 	    while (it.hasNext()) {
-	        Map.Entry<Integer,Room> roomEntry = it.next();
+	        final Map.Entry<Integer,Room> roomEntry = it.next();
 			myHospital.getRoom(roomEntry.getKey()).setMyTab(new TabItem(tabFolder, SWT.None));
 			myHospital.getRoom(roomEntry.getKey()).getMyTab().setText("Room " + roomEntry.getKey());
 			myHospital.getRoom(roomEntry.getKey()).setMyTabGroup(new Group(tabFolder, SWT.NONE));
@@ -175,7 +175,7 @@ public class MainWindow {
 			Iterator<Entry<Integer,Bed>> bedIt = myHospital.getRoom(roomEntry.getKey()).getBeds().entrySet().iterator();
 			int bedCounter = 1;
 			while (bedIt.hasNext()) {
-		        Map.Entry<Integer, Bed> bedEntry = bedIt.next();
+		        final Map.Entry<Integer, Bed> bedEntry = bedIt.next();
 				
 				myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).setMyGroup(new Group(myHospital.getRoom(roomEntry.getKey()).getMyTabGroup(), SWT.NONE));
 				myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).getMyGroup().setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));

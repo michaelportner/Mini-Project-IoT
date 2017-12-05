@@ -27,7 +27,6 @@ public class HistoryEntry implements Comparable<HistoryEntry> {
 		this.dateTime = datetime;
 	}
 	
-	@Override
 	public int compareTo(HistoryEntry o) {
 		if (getDateTime() == null || o.getDateTime() == null) {
 			return 0;
