@@ -19,11 +19,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.layout.RowData;
 
-public class MainWindow {
+public final class MainWindow {
 
 	protected Shell shlBedObserver;
 	private TabFolder tabFolder;
-	private Hospital myHospital = Hospital.getInstance();
+	protected static Hospital myHospital = Hospital.getInstance();
+	private static ObserverMqttClient myObserverMqttClient = ObserverMqttClient.getInstance();
 	
 	/**
 	 * Launch the application.
@@ -32,8 +33,8 @@ public class MainWindow {
 	public static void main(String[] args) {
 		try {
 			MainWindow window = new MainWindow();
-			ObserverMqttClient myObserverMqttClient = ObserverMqttClient.getInstance();
-			myObserverMqttClient.publishInitializeRequest(ObserverRequest.REINITIALIZE);
+			myObserverMqttClient.publishReinitializeRequest();
+			myObserverMqttClient.subscribe();
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -120,7 +121,7 @@ public class MainWindow {
 				btnClose.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
-						shlBedObserver.close();
+						shutDown();
 					}
 				});
 				btnClose.setBounds(606, 10, 90, 30);
@@ -158,6 +159,11 @@ public class MainWindow {
 		
 
 	}	
+	
+	public void shutDown() {
+		shlBedObserver.close();
+		myObserverMqttClient.disconnectBroker();
+	}
 	
 	public void refreshAllViews() {
 		removeAllViews();
