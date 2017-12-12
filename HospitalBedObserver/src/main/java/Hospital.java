@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Hospital {
 	private String myName = new String("");
-	private HashMap<Integer, Room> myRooms = new HashMap<Integer, Room>();
+	private Map<Integer, Room> myRooms = new TreeMap<Integer, Room>();
     private static final Hospital myHospital = new Hospital(); 
     private Hospital() {
 	}
@@ -24,16 +24,24 @@ public class Hospital {
 		this.myName = myName;
 	}
 
-	public HashMap<Integer, Room> getRooms() {
+	public Map<Integer, Room> getRooms() {
 		return myRooms;
 	}
 	
-	public Room getRoom(int Index) {
+	public synchronized Room getRoom(int Index) {
 		return myRooms.get(Index);
 	}
 
 	public void addRoom(int Index, Room Room) {
 		myRooms.put(Index, Room);
+	}
+	
+	public void removeRoom(int Index) {
+		myRooms.remove(Index);
+	}
+	
+	public void removeAllRooms() {
+		myRooms.clear();
 	}
 	
 }

@@ -37,16 +37,20 @@ public class Bed {
 		return myBedInfo;
 	}
 	
-	public void setMyBedInfo(BedInfo BedInfo) {
+	public synchronized void setMyBedInfo(BedInfo BedInfo) {
 		this.myBedInfo = BedInfo;
 	}
 	
-
-	public void setMyState(State myState) {
-		Date DateTimeNow = new Date();
-		this.myState = myState;
-		this.myBedInfo.addHistoryEntry(DateTimeNow.getTime(), myState);
-		switch (myState){
+	public void resetBedState() {
+		if (this.myState != State.UNKNOWN){
+			this.myState = State.UNKNOWN;
+		}else {
+			setMyState(State.UNKNOWN);
+		}
+	}
+	
+	public void setMyGroupBackgroundColor() {
+		switch (this.myState){
 		case RED:
 			myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
 			break;
@@ -60,6 +64,13 @@ public class Bed {
 			myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 			break;			
 		}
+	}
+	
+
+	public synchronized void setMyState(State myState) {
+		Date DateTimeNow = new Date();
+		this.myState = myState;
+		this.myBedInfo.addHistoryEntry(DateTimeNow.getTime(), myState);
 	}	
 	
 }
