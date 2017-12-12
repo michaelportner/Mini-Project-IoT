@@ -1,7 +1,11 @@
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class Room {
 	private Map<Integer, Bed> myBeds = new TreeMap<Integer, Bed>();
@@ -52,6 +56,18 @@ public class Room {
 	
 	public synchronized void removeBeds() {
 		myBeds.clear();
+	}
+	
+	public void setMyGroupBackgroundColor() {
+		Iterator<Entry<Integer,Bed>> bedIt = getBeds().entrySet().iterator();
+		while (bedIt.hasNext()) {
+	        Map.Entry<Integer, Bed> bedEntry = bedIt.next();
+	        if(getBed(bedEntry.getKey()).getMyState() == State.RED) {
+	        	myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
+	        	return;
+	        }
+		}
+    	myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 	}
 	
 	public int getAmountOfBeds() {
