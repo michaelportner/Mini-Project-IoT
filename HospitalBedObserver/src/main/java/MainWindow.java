@@ -29,7 +29,7 @@ public final class MainWindow {
 	protected static Hospital myHospital = Hospital.getInstance();
 	private static ObserverMqttClient myObserverMqttClient = ObserverMqttClient.getInstance();
 	private static final int REFRESH_TIME = 1000;
-	private static final int AMOUNT_OF_REFRESH_TILL_RESET = 3;
+	private static final int AMOUNT_OF_REFRESH_TILL_RESET = 10;
 	private static final long TIME_TO_WAIT_ON_REINITIALIZE_MS = 10000;	
 	private static long startRefreshTime = System.currentTimeMillis();
 	private static long amountOfRefresh = 0;
