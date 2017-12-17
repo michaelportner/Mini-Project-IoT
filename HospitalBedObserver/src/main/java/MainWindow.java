@@ -30,7 +30,7 @@ public final class MainWindow {
 	private static ObserverMqttClient myObserverMqttClient = ObserverMqttClient.getInstance();
 	private static final int REFRESH_TIME = 1000;
 	private static final int AMOUNT_OF_REFRESH_TILL_RESET = 10;
-	private static final long TIME_TO_WAIT_ON_REINITIALIZE_MS = 10000;	
+	private static final long TIME_TO_WAIT_ON_REINITIALIZE_MS = 30000;	
 	private static long startRefreshTime = System.currentTimeMillis();
 	private static long amountOfRefresh = 0;
 	private static boolean isViewRefreshing = false;
@@ -43,7 +43,6 @@ public final class MainWindow {
 	public static void main(String[] args) {
 		try {
 			MainWindow window = new MainWindow();
-			myObserverMqttClient.publishReinitializeRequest();
 			myObserverMqttClient.subscribe();
 			window.open();
 		} catch (Exception e) {
@@ -58,9 +57,9 @@ public final class MainWindow {
 	public void open() throws InterruptedException {
 		Display display = Display.getDefault();
 		createContents();
-		
 		shlBedObserver.open();
 		shlBedObserver.layout();
+		refreshViews();
 		while (!shlBedObserver.isDisposed()) {
 			if ((System.currentTimeMillis()-startRefreshTime) > REFRESH_TIME && !isViewRefreshing)
 			{
@@ -75,6 +74,7 @@ public final class MainWindow {
 					}
 				 }
 				 startRefreshTime = System.currentTimeMillis();
+				 myObserverMqttClient.publishGetStatesRequest();
 				 ++amountOfRefresh;
 				 
 			}
@@ -133,43 +133,7 @@ public final class MainWindow {
 		btnRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				isViewRefreshing = true;
-				removeAll();
-				ReinitializeInfoWindow myReinitializeInfoWindow = new ReinitializeInfoWindow(shlBedObserver,SWT.ICON_INFORMATION,TIME_TO_WAIT_ON_REINITIALIZE_MS);
-				myReinitializeInfoWindow.open();
-				long startReinitializeTime = System.currentTimeMillis();
-				long currentTimeMs = startReinitializeTime;
-				long miliSecondsRemained = 0;
-				while ((currentTimeMs-startReinitializeTime) < TIME_TO_WAIT_ON_REINITIALIZE_MS) {		
-					if (miliSecondsRemained != ((currentTimeMs-startReinitializeTime) - (currentTimeMs-startReinitializeTime)%1000)){
-						miliSecondsRemained = ((currentTimeMs-startReinitializeTime) - (currentTimeMs-startReinitializeTime)%1000);
-						myReinitializeInfoWindow.setLblProgressText(miliSecondsRemained);;
-					}
-					currentTimeMs = System.currentTimeMillis();
-				}
-				myReinitializeInfoWindow.close();
-				//Test Block
-				myHospital.addRoom(1, new Room());
-				myHospital.addRoom(2, new Room());
-				myHospital.addRoom(3, new Room());
-				
-				myHospital.getRoom(1).addBed(1, new Bed());
-				myHospital.getRoom(1).addBed(2, new Bed());	
-				myHospital.getRoom(1).addBed(3, new Bed());
-				myHospital.getRoom(1).addBed(4, new Bed());
-				
-				myHospital.getRoom(2).addBed(1, new Bed());
-				myHospital.getRoom(2).addBed(2, new Bed());
-				myHospital.getRoom(2).addBed(3, new Bed());
-				myHospital.getRoom(2).addBed(5, new Bed());
-				myHospital.getRoom(2).addBed(6, new Bed());
-				myHospital.getRoom(2).addBed(7, new Bed());
-				myHospital.getRoom(2).addBed(8, new Bed());
-				
-				
-				//End Test Block
-				createAllViews();
-				isViewRefreshing = false;
+				refreshViews();
 			}
 		});
 		btnRefresh.setBounds(488, 10, 90, 30);
@@ -186,30 +150,30 @@ public final class MainWindow {
 		btnClose.setText("Close");
 		
 		//Test Block
-			myHospital.addRoom(1, new Room());
-			myHospital.addRoom(2, new Room());
-			myHospital.addRoom(3, new Room());
-			
-			myHospital.getRoom(1).addBed(1, new Bed());
-			myHospital.getRoom(1).addBed(2, new Bed());	
-			myHospital.getRoom(1).addBed(3, new Bed());
-			myHospital.getRoom(1).addBed(4, new Bed());
-			myHospital.getRoom(1).addBed(5, new Bed());
-			myHospital.getRoom(1).addBed(6, new Bed());
-			myHospital.getRoom(1).addBed(7, new Bed());
-			myHospital.getRoom(1).addBed(8, new Bed());
-			
-			myHospital.getRoom(2).addBed(1, new Bed());
-			myHospital.getRoom(2).addBed(2, new Bed());
-			myHospital.getRoom(2).addBed(3, new Bed());
-			
-			myHospital.getRoom(3).addBed(1, new Bed());
-			myHospital.getRoom(3).addBed(2, new Bed());
-			myHospital.getRoom(3).addBed(3, new Bed());
-			myHospital.getRoom(3).addBed(4, new Bed());
-			myHospital.getRoom(3).addBed(5, new Bed());
-			myHospital.getRoom(3).addBed(6, new Bed());
-			
+//			myHospital.addRoom(1, new Room());
+//			myHospital.addRoom(2, new Room());
+//			myHospital.addRoom(3, new Room());
+//			
+//			myHospital.getRoom(1).addBed(1, new Bed());
+//			myHospital.getRoom(1).addBed(2, new Bed());	
+//			myHospital.getRoom(1).addBed(3, new Bed());
+//			myHospital.getRoom(1).addBed(4, new Bed());
+//			myHospital.getRoom(1).addBed(5, new Bed());
+//			myHospital.getRoom(1).addBed(6, new Bed());
+//			myHospital.getRoom(1).addBed(7, new Bed());
+//			myHospital.getRoom(1).addBed(8, new Bed());
+//			
+//			myHospital.getRoom(2).addBed(1, new Bed());
+//			myHospital.getRoom(2).addBed(2, new Bed());
+//			myHospital.getRoom(2).addBed(3, new Bed());
+//			
+//			myHospital.getRoom(3).addBed(1, new Bed());
+//			myHospital.getRoom(3).addBed(2, new Bed());
+//			myHospital.getRoom(3).addBed(3, new Bed());
+//			myHospital.getRoom(3).addBed(4, new Bed());
+//			myHospital.getRoom(3).addBed(5, new Bed());
+//			myHospital.getRoom(3).addBed(6, new Bed());
+//			
 		//End Test Block
 			
 			createAllViews();
@@ -328,4 +292,49 @@ public final class MainWindow {
 		}
 		myHospital.removeAllRooms();
 	}
+	
+	private void refreshViews() {
+		isViewRefreshing = true;
+		myObserverMqttClient.publishReinitializeRequest();
+		removeAll();
+		ReinitializeInfoWindow myReinitializeInfoWindow = new ReinitializeInfoWindow(shlBedObserver,SWT.ICON_INFORMATION,TIME_TO_WAIT_ON_REINITIALIZE_MS);
+		myReinitializeInfoWindow.open();
+		long startReinitializeTime = System.currentTimeMillis();
+		long currentTimeMs = startReinitializeTime;
+		long miliSecondsRemained = 0;
+		while ((currentTimeMs-startReinitializeTime) < TIME_TO_WAIT_ON_REINITIALIZE_MS) {		
+			if (miliSecondsRemained != ((currentTimeMs-startReinitializeTime) - (currentTimeMs-startReinitializeTime)%1000)){
+				miliSecondsRemained = ((currentTimeMs-startReinitializeTime) - (currentTimeMs-startReinitializeTime)%1000);
+				myReinitializeInfoWindow.setLblProgressText(miliSecondsRemained);;
+			}
+			currentTimeMs = System.currentTimeMillis();
+		}
+		myReinitializeInfoWindow.close();
+		//Test Block
+//		myHospital.addRoom(1, new Room());
+//		myHospital.addRoom(2, new Room());
+//		myHospital.addRoom(3, new Room());
+//		
+//		myHospital.getRoom(1).addBed(1, new Bed());
+//		myHospital.getRoom(1).addBed(2, new Bed());	
+//		myHospital.getRoom(1).addBed(3, new Bed());
+//		myHospital.getRoom(1).addBed(4, new Bed());
+//		
+//		myHospital.getRoom(2).addBed(1, new Bed());
+//		myHospital.getRoom(2).addBed(2, new Bed());
+//		myHospital.getRoom(2).addBed(3, new Bed());
+//		myHospital.getRoom(2).addBed(5, new Bed());
+//		myHospital.getRoom(2).addBed(6, new Bed());
+//		myHospital.getRoom(2).addBed(7, new Bed());
+//		myHospital.getRoom(2).addBed(8, new Bed());
+//		
+		
+		//End Test Block
+		createAllViews();
+		isViewRefreshing = false;
+	}
+//	public static void OnBedStateChanged(Bed bed) {
+//		bed.setMyGroupBackgroundColor();
+//		myHospital.getRoom(roomIndex).setMyGroupBackgroundColor();
+//	}
 }

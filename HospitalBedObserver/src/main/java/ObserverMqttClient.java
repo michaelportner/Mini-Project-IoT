@@ -12,7 +12,8 @@ public class ObserverMqttClient{
     private String subscribeTopic = "HospitalID/#";
     private String content      = "";
     private int qos             = 2;
-    private String broker       = "tcp://test.mosquitto.org:1883";
+    //private String broker       = "tcp://test.mosquitto.org:1883";
+    private String broker       = "tcp://127.0.0.1:1883";
     private String clientId     = "HospitalBedObserver";
     private MemoryPersistence persistence = new MemoryPersistence();
     private MqttClient myClient;
@@ -34,9 +35,8 @@ public class ObserverMqttClient{
             		// logic at this point. This sample simply exits.
                 	try {
                         System.out.println("Connecting lost to broker: "+broker);
-                        connOpts.setCleanSession(true);
                         System.out.println("Try reconnecting to broker: "+broker);
-            	        myClient.connect(connOpts);
+            	        myClient.reconnect();
             	        System.out.println("Connected");
                     } catch(MqttException me) {
             	        System.out.println("reason "+me.getReasonCode());
@@ -45,6 +45,7 @@ public class ObserverMqttClient{
             	        System.out.println("cause "+me.getCause());
             	        System.out.println("excep "+me);
             	        me.printStackTrace();
+            	        System.exit(0);
                     }
             	}
 
@@ -96,6 +97,7 @@ public class ObserverMqttClient{
 	        System.out.println("cause "+me.getCause());
 	        System.out.println("excep "+me);
 	        me.printStackTrace();
+	        System.exit(0);
         }
 	}
     
@@ -118,7 +120,7 @@ public class ObserverMqttClient{
      */
     protected void publishGetStatesRequest() {
     	
-		publishRequest(ObserverRequest.REINITIALIZE);
+		publishRequest(ObserverRequest.GETSTATES);
     	
     }
     
@@ -156,6 +158,7 @@ public class ObserverMqttClient{
 	        System.out.println("cause "+me.getCause());
 	        System.out.println("excep "+me);
 	        me.printStackTrace();
+	        System.exit(0);
 	    }
     }
     
@@ -188,6 +191,7 @@ public class ObserverMqttClient{
 	        System.out.println("cause "+me.getCause());
 	        System.out.println("excep "+me);
 	        me.printStackTrace();
+	        System.exit(0);
 	    }
     }   
 

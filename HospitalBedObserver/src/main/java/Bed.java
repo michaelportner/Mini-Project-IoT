@@ -71,6 +71,7 @@ public class Bed {
 		Date DateTimeNow = new Date();
 		this.myState = myState;
 		this.myBedInfo.addHistoryEntry(DateTimeNow.getTime(), myState);
+		//MainWindow.thisOnBedStateChanged(this);
 	}	
 	
 }

@@ -128,7 +128,6 @@ public class MqttMessageHandler {
 			MainWindow.myHospital.removeRoom(roomIndex);
 			MainWindow.myHospital.addRoom(roomIndex, myRoom);
 		}
-		notifyAll();	
 	}
 
 }
