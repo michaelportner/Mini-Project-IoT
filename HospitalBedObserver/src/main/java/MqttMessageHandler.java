@@ -9,8 +9,8 @@ import java.util.Collections;
  */
 public class MqttMessageHandler {
 	private String stateTopic = "HospitalID/+/+/State";
-	private String initializeTopic = "HospitalID/+/Reinitialize";
-	private static final Pattern ROOM_INDEX_INITIALIZE_PATTERN = Pattern.compile("(?<=hospitalid/room).*(?=/reinitialize)");
+	private String initializeTopic = "HospitalID/+/Beds";
+	private static final Pattern ROOM_INDEX_INITIALIZE_PATTERN = Pattern.compile("(?<=hospitalid/room).*(?=/beds)");
 	private static final Pattern ROOM_INDEX_STATE_PATTERN = Pattern.compile("(?<=hospitalid/room).*(?=/bed([1-9]|[1-9][0-9])/state)");
 	private static final Pattern BED_INDEX_STATE_PATTERN = Pattern.compile("(?<=hospitalid/room([1-9]|[1-9][0-9])/bed).*(?=/state)");
 	private static final String ROOM_INITIALIZE_DELIMETER = "-";
@@ -48,14 +48,17 @@ public class MqttMessageHandler {
 	private int getRoomIndexFromTopic(String topic) {
 		Matcher matcher = ROOM_INDEX_STATE_PATTERN.matcher(topic);
 		if (matcher.find()) {
+			if (!matcher.group(0).isEmpty()){
 			return Integer.parseInt(matcher.group(0));
+			}
 		}
 		matcher = ROOM_INDEX_INITIALIZE_PATTERN.matcher(topic);
 		if (matcher.find()) {
+			if (!matcher.group(0).isEmpty()){
 			return Integer.parseInt(matcher.group(0));
-		}else {
-			return 0;
-		}	
+			}
+		}
+		return 0;
 	}
 	
 	/**
@@ -65,10 +68,11 @@ public class MqttMessageHandler {
 	private int getBedIndexFromTopic(String topic) {
 		Matcher matcher = BED_INDEX_STATE_PATTERN.matcher(topic);
 		if (matcher.find()) {
+			if (!matcher.group(0).isEmpty()){
 			return Integer.parseInt(matcher.group(0));
-		}else {
-			return 0;
-		}	
+			}
+		}
+		return 0;
 	}
 	
 	/**
@@ -128,6 +132,6 @@ public class MqttMessageHandler {
 			MainWindow.myHospital.removeRoom(roomIndex);
 			MainWindow.myHospital.addRoom(roomIndex, myRoom);
 		}
-	}
+}
 
 }

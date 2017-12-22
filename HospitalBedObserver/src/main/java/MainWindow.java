@@ -1,6 +1,14 @@
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Menu;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -19,6 +27,12 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.FillLayout;
+import swing2swt.layout.BorderLayout;
+import swing2swt.layout.BoxLayout;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormAttachment;
 
 public final class MainWindow {
 
@@ -26,7 +40,7 @@ public final class MainWindow {
 	private TabFolder tabFolder;
 	private TabItem mainTabItem;
 	private Group mainTabGroup;
-	protected static Hospital myHospital = Hospital.getInstance();
+	protected static Hospital myHospital = Hospital.getInstance("MyHospital");
 	private static ObserverMqttClient myObserverMqttClient = ObserverMqttClient.getInstance();
 	private static final int REFRESH_TIME = 1000;
 	private static final int AMOUNT_OF_REFRESH_TILL_RESET = 10;
@@ -34,6 +48,7 @@ public final class MainWindow {
 	private static long startRefreshTime = System.currentTimeMillis();
 	private static long amountOfRefresh = 0;
 	private static boolean isViewRefreshing = false;
+    private static String PATH = "C:\\Users\\micha\\OneDrive\\Dokumente\\ZHAW\\Mini-Project-IoT\\HospitalBedObserver\\log\\";
 
 	
 	/**
@@ -74,23 +89,23 @@ public final class MainWindow {
 					}
 				 }
 				 startRefreshTime = System.currentTimeMillis();
-				 myObserverMqttClient.publishGetStatesRequest();
+				 //myObserverMqttClient.publishGetStatesRequest();
 				 ++amountOfRefresh;
 				 
 			}
-			if (amountOfRefresh > AMOUNT_OF_REFRESH_TILL_RESET && !isViewRefreshing)
-			{
-				Iterator<Entry<Integer,Room>> it = myHospital.getRooms().entrySet().iterator();
-				while (it.hasNext()) {
-					Map.Entry<Integer,Room> roomEntry = it.next();
-					Iterator<Entry<Integer,Bed>> bedIt = myHospital.getRoom(roomEntry.getKey()).getBeds().entrySet().iterator();
-					while (bedIt.hasNext()) {
-				        Map.Entry<Integer, Bed> bedEntry = bedIt.next();
-						myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).resetBedState();
-					}
-				 }
-				 amountOfRefresh = 0;    
-			}
+//			if (amountOfRefresh > AMOUNT_OF_REFRESH_TILL_RESET && !isViewRefreshing)
+//			{
+//				Iterator<Entry<Integer,Room>> it = myHospital.getRooms().entrySet().iterator();
+//				while (it.hasNext()) {
+//					Map.Entry<Integer,Room> roomEntry = it.next();
+//					Iterator<Entry<Integer,Bed>> bedIt = myHospital.getRoom(roomEntry.getKey()).getBeds().entrySet().iterator();
+//					while (bedIt.hasNext()) {
+//				        Map.Entry<Integer, Bed> bedEntry = bedIt.next();
+//						myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).resetBedState();
+//					}
+//				 }
+//				 amountOfRefresh = 0;    
+//			}
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -104,7 +119,7 @@ public final class MainWindow {
 		shlBedObserver = new Shell();
 		shlBedObserver.setSize(738, 574);
 		shlBedObserver.setText("Bed Observer");
-		shlBedObserver.setLayout(new RowLayout(SWT.HORIZONTAL));
+		shlBedObserver.setLayout(new FormLayout());
 		
 		Menu menu = new Menu(shlBedObserver, SWT.BAR);
 		shlBedObserver.setMenuBar(menu);
@@ -117,6 +132,10 @@ public final class MainWindow {
 		mntmHelp.setText("Help");
 		
 		Composite composite = new Composite(shlBedObserver, SWT.NONE);
+		FormData fd_composite = new FormData();
+		fd_composite.top = new FormAttachment(0, 3);
+		fd_composite.left = new FormAttachment(0, 3);
+		composite.setLayoutData(fd_composite);
 
 		tabFolder = new TabFolder(composite, SWT.NONE);
 		tabFolder.setLocation(0, 0);
@@ -127,7 +146,10 @@ public final class MainWindow {
         mainTabItem.setControl(mainTabGroup);
 		
 		Composite composite_1 = new Composite(shlBedObserver, SWT.NONE);
-		composite_1.setLayoutData(new RowData(718, 55));
+		FormData fd_composite_1 = new FormData();
+		fd_composite_1.top = new FormAttachment(0, 441);
+		fd_composite_1.left = new FormAttachment(0, 3);
+		composite_1.setLayoutData(fd_composite_1);
 		
 		Button btnRefresh = new Button(composite_1, SWT.NONE);
 		btnRefresh.addSelectionListener(new SelectionAdapter() {
@@ -148,6 +170,16 @@ public final class MainWindow {
 		});
 		btnClose.setBounds(606, 10, 90, 30);
 		btnClose.setText("Close");
+		
+		Button btnSaveBedHistories = new Button(composite_1, SWT.NONE);
+		btnSaveBedHistories.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				saveBedHistoryToLog();
+			}
+		});
+		btnSaveBedHistories.setBounds(10, 10, 141, 30);
+		btnSaveBedHistories.setText("Save Bed Histories");
 		
 		//Test Block
 //			myHospital.addRoom(1, new Room());
@@ -333,8 +365,43 @@ public final class MainWindow {
 		createAllViews();
 		isViewRefreshing = false;
 	}
-//	public static void OnBedStateChanged(Bed bed) {
-//		bed.setMyGroupBackgroundColor();
-//		myHospital.getRoom(roomIndex).setMyGroupBackgroundColor();
-//	}
+	
+	public void saveBedHistoryToLog(){
+	    String hospitalDirectoryName = PATH.concat(myHospital.getMyName());
+	    String fileName = "";
+	    Iterator<Entry<Integer,Room>> it = myHospital.getRooms().entrySet().iterator();
+	    File directory = new File(hospitalDirectoryName);
+	    if (! directory.exists()){
+	        directory.mkdir();
+	    }
+		while (it.hasNext()) {
+			Map.Entry<Integer,Room> roomEntry = it.next();
+			Iterator<Entry<Integer,Bed>> bedIt = myHospital.getRoom(roomEntry.getKey()).getBeds().entrySet().iterator();
+			while (bedIt.hasNext()) {
+		        Map.Entry<Integer, Bed> bedEntry = bedIt.next();
+		        fileName = "Room "+ roomEntry.getKey().toString() + " Bed " + bedEntry.getKey().toString() + ".txt";
+			    File file = new File(hospitalDirectoryName + "/" + fileName);
+			    try{
+				    file.createNewFile(); // if file already exists will do nothing 
+			        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			        BufferedWriter bw = new BufferedWriter(fw);
+						java.util.List<HistoryEntry> history = myHospital.getRoom(roomEntry.getKey()).getBed(bedEntry.getKey()).getMyBedInfo().getHistory();
+						Collections.sort(history);
+						DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+						for (HistoryEntry historyEntry:history){
+							bw.write(dateFormat.format(historyEntry.getDateTime()) + "     |      State: " + historyEntry.getHistoricalState().toString());
+							bw.newLine();
+						}
+			        bw.close();
+			    }
+			    catch (IOException e){
+			        e.printStackTrace();
+			        System.exit(-1);
+			    }
+			}
+		 }
+
+
+
+	}
 }

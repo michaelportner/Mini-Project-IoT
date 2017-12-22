@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Label;
 public class ReinitializeInfoWindow extends Dialog {
 
 	protected Object result;
-	protected Shell shell;
+	protected Shell shlInitialization;
 	private Label lblProgressText;
 	private String progressString;
 	private long timeToWaitOnReinitializeMs;
@@ -34,8 +34,8 @@ public class ReinitializeInfoWindow extends Dialog {
 	 */
 	public Object open() {
 		createContents();
-		shell.open();
-		shell.layout();
+		shlInitialization.open();
+		shlInitialization.layout();
 		return result;
 	}
 
@@ -43,23 +43,23 @@ public class ReinitializeInfoWindow extends Dialog {
 	 * Close Info Window
 	 */
 	public void close() {
-		shell.dispose();
+		shlInitialization.dispose();
 	}
 	/**
 	 * Create contents of the dialog.
 	 */
 	private void createContents() {
-		shell = new Shell(getParent(), SWT.BORDER | SWT.TITLE);
-		shell.setSize(450, 300);
-		shell.setText(getText());
-		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
+		shlInitialization = new Shell(getParent(), SWT.BORDER | SWT.TITLE);
+		shlInitialization.setSize(450, 300);
+		shlInitialization.setText("Initialization");
+		shlInitialization.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Group group = new Group(shell, SWT.NONE);
+		Group group = new Group(shlInitialization, SWT.NONE);
 		group.setLayout(null);
 		
 		Label lblReinitialisationIsIn = new Label(group, SWT.NONE);
 		lblReinitialisationIsIn.setBounds(84, 70, 268, 33);
-		lblReinitialisationIsIn.setText("Reinitialisation is in progress...");
+		lblReinitialisationIsIn.setText("Reinitialization is in progress...");
 		
 		lblProgressText = new Label(group, SWT.NONE);
 		lblProgressText.setBounds(84, 112, 268, 33);

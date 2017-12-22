@@ -1,27 +1,33 @@
 import java.util.*;
 
 public class Hospital {
-	private String myName = new String("");
+	private static String myName = new String("");
 	private Map<Integer, Room> myRooms = new TreeMap<Integer, Room>();
     private static final Hospital myHospital = new Hospital(); 
     private Hospital() {
 	}
     
      //Singleton   
-    public static Hospital getInstance() {
-      return myHospital;
+    public static Hospital getInstance(String name) {
+    	myName = name;
+    	return myHospital;
     } 
+    
+    //Singleton   
+   public static Hospital getInstance() {
+   	return myHospital;
+   } 
 	
 	public int getAmountOfRooms() {
 		return this.myRooms.size();
 	}
 	
 	public String getMyName() {
-		return this.myName;
+		return Hospital.myName;
 	}
 
 	public void setMyName(String myName) {
-		this.myName = myName;
+		Hospital.myName = myName;
 	}
 
 	public Map<Integer, Room> getRooms() {

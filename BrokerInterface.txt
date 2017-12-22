@@ -1,0 +1,10 @@
+Structure:
+State command:
+HospitalID/Room?/Bed?/State
+Red / Orange / Green / Unknown
+
+HospitalID/Room?/Reinitialize
+i.e. 1-2-4-5
+
+HospitalBedObserver/Request
+Reinitialize / GetStates

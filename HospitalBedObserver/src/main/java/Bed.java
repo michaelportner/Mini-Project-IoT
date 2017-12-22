@@ -50,19 +50,21 @@ public class Bed {
 	}
 	
 	public void setMyGroupBackgroundColor() {
-		switch (this.myState){
-		case RED:
-			myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
-			break;
-		case ORANGE:
-			myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
-			break;
-		case GREEN:
-			myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_GREEN));
-			break;
-		default:
-			myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
-			break;			
+		if (myGroup != null) {
+			switch (this.myState){
+			case RED:
+				myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
+				break;
+			case ORANGE:
+				myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
+				break;
+			case GREEN:
+				myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_GREEN));
+				break;
+			default:
+				myGroup.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
+				break;			
+			}
 		}
 	}
 	

@@ -13,7 +13,7 @@ public class ObserverMqttClient{
     private String content      = "";
     private int qos             = 2;
     //private String broker       = "tcp://test.mosquitto.org:1883";
-    private String broker       = "tcp://127.0.0.1:1883";
+    private String broker       = "tcp://test.mosquitto.org:1883";
     private String clientId     = "HospitalBedObserver";
     private MemoryPersistence persistence = new MemoryPersistence();
     private MqttClient myClient;
